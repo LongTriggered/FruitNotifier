@@ -101,22 +101,22 @@ function checkFruitOrigin(FruitName)
 
             elseif v == true then
                 createTag(FruitName, "Notify", true) -- check may cai con lai
-                local a = FruitName.Name
-                print((a)..' from: '..i)
-                return sendJson("NewFruit", {Name = tostring(a) , Source = i} )
+                print((FruitName.Name)..' from: '..i)
+                sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = i} )
+                return 
             end
         end
         if FruitName:GetAttribute("FruitSource") == nil then -- check fruit tu nhien
             createTag(FruitName, "Notify", true)
-            local a = FruitName.Name
-            print((a).." tu nhien")
-            return sendJson("NewFruit", {Name = tostring(a) , Source = "Natural"} )
+            print((FruitName.Name).." tu nhien")
+            sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = "Natural"} )
+            return
 
         elseif FruitName:GetAttribute("FruitSource") == "DroppedFruit" then -- check fruit drop
             createTag(FruitName, "Notify", true)
-            local a = FruitName.Name
-            print((a).." duoc drop")
-            return sendJson("NewFruit", {Name = tostring(a) , Source = "DroppedFruit"} )
+            print((FruitName.Name).." duoc drop")
+            sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = "DroppedFruit"} )
+            return
         end
     end
 end
@@ -179,4 +179,4 @@ end
 workspace.ChildAdded:Connect(function(instance)
     getFruitWorkspace(instance)
 end)
-print('up')
+print('kaka')
