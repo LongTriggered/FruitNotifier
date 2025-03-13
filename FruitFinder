@@ -102,18 +102,18 @@ function checkFruitOrigin(FruitName)
             elseif v == true then
                 createTag(FruitName, "Notify", true) -- check may cai con lai
                 print((FruitName.Name)..' from: '..i)
-                return sendJson("NewFruit", {Name = (FruitName.Name) , Source = i} )
+                return sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = i} )
             end
         end
         if FruitName:GetAttribute("FruitSource") == nil then -- check fruit tu nhien
             createTag(FruitName, "Notify", true)
             print((FruitName.Name).." tu nhien")
-            return sendJson("NewFruit", {Name = (FruitName.Name) , Source = "Natural"} )
+            return sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = "Natural"} )
 
         elseif FruitName:GetAttribute("FruitSource") == "DroppedFruit" then -- check fruit drop
             createTag(FruitName, "Notify", true)
             print((FruitName.Name).." duoc drop")
-            return sendJson("NewFruit", {Name = (FruitName.Name) , Source = "DroppedFruit"} )
+            return sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = "DroppedFruit"} )
         end
     end
 end
