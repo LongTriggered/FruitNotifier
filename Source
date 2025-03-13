@@ -20,6 +20,10 @@ local fruitType = {
     Others = false
     }
 
+function fileCreate(filename,table)
+        writefile(Player.Name.. "_" ..filename.. ".json", game:GetService('HttpService'):JSONEncode(table))
+end
+
 function sendJson(filename,data)
     fileCreate(filename,data)
     local fileData = readfile(Player.Name.. "_" ..filename.. ".json")
@@ -101,22 +105,16 @@ function checkFruitOrigin(FruitName)
 
             elseif v == true then
                 createTag(FruitName, "Notify", true) -- check may cai con lai
-                print((FruitName.Name)..' from: '..i)
-                sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = i} )
-                return 
+                return sendJson("NewFruit", {Name = (FruitName.Name) , Source = i} ) ,          print((FruitName.Name)..' from: '..i)
             end
         end
         if FruitName:GetAttribute("FruitSource") == nil then -- check fruit tu nhien
             createTag(FruitName, "Notify", true)
-            print((FruitName.Name).." tu nhien")
-            sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = "Natural"} )
-            return
+            return sendJson("NewFruit", {Name = (FruitName.Name) , Source = "Natural"} ) ,      print((FruitName.Name).." tu nhien")
 
         elseif FruitName:GetAttribute("FruitSource") == "DroppedFruit" then -- check fruit drop
             createTag(FruitName, "Notify", true)
-            print((FruitName.Name).." duoc drop")
-            sendJson("NewFruit", {Name = tostring(FruitName.Name) , Source = "DroppedFruit"} )
-            return
+            return sendJson("NewFruit", {Name = (FruitName.Name) , Source = "DroppedFruit"} ) , print((FruitName.Name).." duoc drop")
         end
     end
 end
@@ -179,4 +177,4 @@ end
 workspace.ChildAdded:Connect(function(instance)
     getFruitWorkspace(instance)
 end)
-print('kaka')
+print('finally')
