@@ -97,23 +97,26 @@ function checkFruitOrigin(FruitName)
         for i,v in pairs(fruitType) do
             if v == true and i == "LoadedFruit" then -- Check load fruit
                 createTag(FruitName, "Notify", true)
-                return sendJson("NewFruit", tostring(FruitName.Name))
+                return print((FruitName.Name)..' from: '..i.." Method Print Only")
 
             elseif v == true then
                 createTag(FruitName, "Notify", true) -- check may cai con lai
-                print((FruitName.Name)..' from: '..i)
-                return sendJson("NewFruit", tostring(FruitName.Name))
+                local a = FruitName.Name
+                print((a)..' from: '..i)
+                return sendJson("NewFruit", {Name = tostring(a) , Source = i} )
             end
         end
         if FruitName:GetAttribute("FruitSource") == nil then -- check fruit tu nhien
             createTag(FruitName, "Notify", true)
-            print((FruitName.Name).." tu nhien")
-            return sendJson("NewFruit", tostring(FruitName.Name))
+            local a = FruitName.Name
+            print((a).." tu nhien")
+            return sendJson("NewFruit", {Name = tostring(a) , Source = "Natural"} )
 
         elseif FruitName:GetAttribute("FruitSource") == "DroppedFruit" then -- check fruit drop
             createTag(FruitName, "Notify", true)
-            print((FruitName.Name).." duoc drop")
-            return sendJson("NewFruit", tostring(FruitName.Name))
+            local a = FruitName.Name
+            print((a).." duoc drop")
+            return sendJson("NewFruit", {Name = tostring(a) , Source = "DroppedFruit"} )
         end
     end
 end
@@ -176,4 +179,4 @@ end
 workspace.ChildAdded:Connect(function(instance)
     getFruitWorkspace(instance)
 end)
-print('updated')
+print('up')
