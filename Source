@@ -87,21 +87,21 @@ function createTag(instance, Name, Value)
   instance:SetAttribute(Name,Value)
 end
 
-function delayTask(taskname)
-    fruitType[taskname] = true
-    task.delay(3, function()
-        fruitType[taskname] = false
-    end)
-end
-
 function getFruitWorkspace(instance) -- Check Fruit tu nhien va fruit drop
     if instance:FindFirstChild("Fruit") and instance.Name ~= "Fruit " then -- check xem phai fruit da drop ko
             createTag(instance , "FruitSource", "DroppedFruit")
         end
 end
 
+function delayTask(taskname)
+    fruitType[taskname] = true
+    task.delay(4, function()
+        fruitType[taskname] = false
+    end)
+end
+
 function checkFruitOrigin(FruitName)
-    task.wait(1.5)
+    task.wait(1.75)
     if FruitName:FindFirstChild("Fruit") and not FruitName:GetAttribute("Notify") then
         for i,v in pairs(fruitType) do
             if v == true and i == "LoadedFruit" then -- Check load fruit
@@ -159,6 +159,7 @@ mt.__namecall = newcclosure(function(self, ...)
     if method == "InvokeServer" and self.Name == "CommF_" then
 
         if args[1] == "Cousin" and args[2] == "Buy" then
+            print('random called')
             delayTask("Random")
             
         elseif args[1] == "LoadFruit" then
