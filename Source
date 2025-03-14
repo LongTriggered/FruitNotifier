@@ -1,6 +1,11 @@
 local workspace = game:GetService('Workspace')
 local Player = game:GetService('Players').LocalPlayer
 local backpack = Player.Backpack
+
+if not getrawmetatable then
+    error("Exploit nhu c deo ho tro", 0)
+end
+
 local Sea = 0
 if game.PlaceId == 2753915549 then
     Sea = 1
