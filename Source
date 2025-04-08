@@ -1,3 +1,5 @@
+repeat task.wait() until game:IsLoaded()
+
 local workspace = game:GetService('Workspace')
 local Player = game:GetService('Players').LocalPlayer
 local backpack = Player.Backpack
@@ -6,15 +8,7 @@ if not getrawmetatable then
     error("Exploit nhu c deo ho tro", 0)
 end
 
-local Sea = 0
-if game.PlaceId == 2753915549 then
-    Sea = 1
-elseif game.PlaceId == 4442272183 then
-    Sea = 2
-elseif game.PlaceId == 7449423635 then
-	Sea = 3
-end
-local fruitType = {
+fruitType = {
     Random = false, --Done
     Factory = false, -- Done
     Natural = false, -- Done
@@ -24,6 +18,15 @@ local fruitType = {
     SeaEvent = false,
     Others = false
     }
+
+local Sea = 0
+if game.PlaceId == 2753915549 then
+    Sea = 1
+elseif game.PlaceId == 4442272183 then
+    Sea = 2
+elseif game.PlaceId == 7449423635 then
+	Sea = 3
+end
 
 function fileCreate(filename,table)
         writefile(Player.Name.. "_" ..filename.. ".json", game:GetService('HttpService'):JSONEncode(table))
@@ -56,7 +59,7 @@ function sendJson(filename,data)
     local requestFunction = http_request or request or HttpPost
     if requestFunction then
         local response = requestFunction({
-            Url = DiscordWebhookUrl,
+            Url = _G.Setting.Webhook.WebhookLink or DiscordWebhookUrl or "",
             Method = "POST",
             Headers = headers,
             Body = body,
@@ -89,22 +92,21 @@ end
 
 function getFruitWorkspace(instance) -- Check Fruit tu nhien va fruit drop
     if instance:FindFirstChild("Fruit") and instance.Name ~= "Fruit " then -- check xem phai fruit da drop ko
-            createTag(instance , "FruitSource", "DroppedFruit")
-        end
+        createTag(instance , "FruitSource", "DroppedFruit")
+    end
 end
 
 function delayTask(taskname)
     fruitType[taskname] = true
-    task.delay(4, function()
-        fruitType[taskname] = false
-    end)
+    task.wait(0.005)
+    fruitType[taskname] = false
 end
 
 function checkFruitOrigin(FruitName)
-    task.wait(1.75)
+    task.wait()
     if FruitName:FindFirstChild("Fruit") and not FruitName:GetAttribute("Notify") then
         for i,v in pairs(fruitType) do
-            if v == true and i == "LoadedFruit" then -- Check load fruit
+            if i == "LoadedFruit" and v == true then -- Check load fruit
                 createTag(FruitName, "Notify", true)
                 return print((FruitName.Name)..' from: '..i.." Method Print Only")
 
@@ -132,22 +134,33 @@ end
 --------
 if Sea == 3 then
     workspace.Enemies.ChildAdded:Connect(function(Mob) -- Check PirateRaid
-        if Mob:FindFirstChild("HumanoidRootPart") and Mob.HumanoidRootPart:FindFirstChild("TankyParticles") and Mob.Humanoid.Health > 0 then
-            repeat task.wait() until Mob.Humanoid.Health == 0
-            delayTask("PirateRaid")
-        end
+        pcall(function()
+            if Mob:FindFirstChild("HumanoidRootPart") and Mob:FindFirstChild("Humanoid") and Mob.HumanoidRootPart:FindFirstChild("TankyParticles") and Mob.Humanoid.Health > 0 then
+                spawn(function()
+                    repeat task.wait() until Mob.Humanoid.Health == 0
+                    delayTask("PirateRaid")
+                end)
+            end
+        end)
     end)
 end
 
 if Sea == 2 then
     local FactoryDoor = game:getService('Workspace').Map.Dressrosa.SmileFactory.Door -- Check Factory
+    if FactoryDoor.Transparency == 1 then
+        spawn(function()
+        repeat task.wait() until FactoryDoor.Transparency == 0
+        delayTask("Factory")
+        end)
+    end
     FactoryDoor.Changed:Connect(function()
         if FactoryDoor.Transparency == 0 then
             delayTask("Factory")
         end
     end)
 end
-
+local last_random_delaytask = 0
+local random_cooldown = 5
 local mt = getrawmetatable(game) --- Check load fruit and random fruit
 local oldNamecall = mt.__namecall
 
@@ -157,12 +170,21 @@ mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
 
     if method == "InvokeServer" and self.Name == "CommF_" then
-
         if args[1] == "Cousin" and args[2] == "Buy" then
-            print('random called')
-            delayTask("Random")
-            
-        elseif args[1] == "LoadFruit" then
+            local allFalse = true
+            for _, v in pairs(fruitType) do
+                if v == true then
+                    allFalse = false
+                    break
+                end
+            end
+            if allFalse and tick() - last_random_delaytask > random_cooldown then
+                delayTask("Random")
+                last_random_delaytask = tick()
+            end
+        end
+
+        if args[1] == "LoadFruit" then
             delayTask("LoadedFruit")
         end
     end
@@ -183,4 +205,4 @@ end
 workspace.ChildAdded:Connect(function(instance)
     getFruitWorkspace(instance)
 end)
-print('finally')
+print('Loaded Fruit Notifier v1.01')
